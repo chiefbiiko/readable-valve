@@ -38,17 +38,19 @@ The valve will filter out all messages that contain the string `'fraud'`.
 
 ## API
 
-### `valve = createReadableValve(stream, pred)`
+### `valve = createReadableValve(stream[, pred])`
 
-Create a valve for a readable stream that filters according to a predicate function.
+Create a valve for a readable stream that filters according to a predicate function. If the predicate is not passed at instantiation it must be provided in any calls of `valve.subscribe` and `valve.subscribeOnce`.
 
-### `valve.subscribe(listener)`
+### `valve.subscribe(listener[, pred])`
 
-Subscribe a listener to the valve.
+Subscribe a listener to the valve. If no predicate was passed at instantiation it must be provided here.
 
-### `valve.subscribeOnce(listener)`
+### `valve.subscribeOnce(listener[, pred])`
 
-Subscribe a listener to the valve that will be called at most once.
+Subscribe a listener to the valve that will be called at most once. If no predicate was passed at instantiation it must be provided here.
+
+> You can specify various predicate listeners to a readable stream with only one valve by specifying distinct predicates in `valve.subscribe` and `valve.subscribeOnce` calls.
 
 ### `valve.unsubscribe(listener)`
 

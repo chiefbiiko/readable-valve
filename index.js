@@ -1,12 +1,16 @@
-const createReadableValve = (readable, pred) => ({
-  subscribe (listener) {
-    const _listener = (...args) => pred(...args) && listener.apply(this, args)
+const createReadableValve = (readable, predicate) => ({
+  subscribe (listener, pred) {
+    const p = pred || predicate
+    if (!p) throw TypeError('no predicate')
+    const _listener = (...args) => p(...args) && listener.apply(this, args)
     _listener._id = String(listener)
     readable.on('data', _listener)
     return this
   },
-  subscribeOnce (listener) {
-    const _listener = (...args) => pred(...args) && listener.apply(this, args)
+  subscribeOnce (listener, pred) {
+    const p = pred || predicate
+    if (!p) throw TypeError('no predicate')
+    const _listener = (...args) => p(...args) && listener.apply(this, args)
     _listener._id = String(listener)
     readable.once('data', _listener)
     return this

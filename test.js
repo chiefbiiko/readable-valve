@@ -93,3 +93,26 @@ tape('unerror', t => {
     setTimeout(t.end, 300)
   }
 })
+
+tape('fatal', t => {
+  t.throws(() => {
+    createReadableValve(new PassThrough())
+      .subscribe(chunk => t.false(/fraud/.test(chunk), 'no fraud passed thru'))
+  }, TypeError)
+
+  t.end()
+})
+
+tape('predicate override', t => {
+  t.plan(1)
+  const passthru = new PassThrough()
+
+  createReadableValve(passthru, chunk => !/fraud/.test(chunk))
+    .subscribe(
+      chunk => t.true(/fraud/.test(chunk), 'only fraud'), // listener
+      chunk => /fraud/.test(chunk)                        // predicate
+    )
+    .error(t.end)
+
+  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye']) passthru.write(msg)
+})
