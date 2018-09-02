@@ -1,0 +1,30 @@
+{
+  "name": "readable-valve",
+  "version": "0.1.0",
+  "description": "subscribe to filtered emits of readable streams",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape ./test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chiefbiiko/readable-valve.git"
+  },
+  "keywords": [
+    "valve",
+    "readable",
+    "stream",
+    "filter",
+    "subscribe",
+    "predicate"
+  ],
+  "author": "Noah Anabiik Schwarz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chiefbiiko/readable-valve/issues"
+  },
+  "homepage": "https://github.com/chiefbiiko/readable-valve#readme",
+  "devDependencies": {
+    "tape": "^4.9.1"
+  }
+}
