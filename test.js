@@ -8,23 +8,23 @@ tape('subscribe', t => {
 
   createReadableValve(passthru, chunk => !/fraud/.test(chunk))
     .subscribe(chunk => t.false(/fraud/.test(chunk), 'no fraud passed thru'))
-    .error(t.end)
+    .onerror(t.end)
 
-  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye']) passthru.write(msg)
+  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye' ]) passthru.write(msg)
 })
 
-tape('subscribeOnce', t => {
+tape('subscribe once', t => {
   const passthru = new PassThrough()
   var called = 0
 
   createReadableValve(passthru, chunk => !/fraud/.test(chunk))
-    .subscribeOnce(chunk => {
+    .subscribe(chunk => {
       if (++called > 1) t.fail('more than once')
       t.false(/fraud/.test(chunk), 'just once')
-    })
-    .error(t.end)
+    }, 1)
+    .onerror(t.end)
 
-  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye']) passthru.write(msg)
+  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye' ]) passthru.write(msg)
 
   setTimeout(t.end, 300)
 })
@@ -34,7 +34,7 @@ tape('unsubscribe', t => {
   var called = 0
 
   const valve = createReadableValve(passthru, chunk => !/fraud/.test(chunk))
-  valve.error(t.end)
+  valve.onerror(t.end)
 
   valve.subscribe(function listener (chunk) {
     if (++called > 1) t.fail('more than once')
@@ -43,18 +43,18 @@ tape('unsubscribe', t => {
   })
 
   var pending = 4
-  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye']) {
+  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye' ]) {
     passthru.write(msg)
     if (!--pending) setTimeout(t.end, 300)
   }
 })
 
-tape('error', t => {
+tape('onerror', t => {
   const passthru = new PassThrough()
 
   createReadableValve(passthru, chunk => !/fraud/.test(chunk))
     .subscribe(chunk => t.false(/fraud/.test(chunk), 'no fraud passed thru'))
-    .error(err => {
+    .onerror(err => {
       t.ok(err.message, 'some error')
       passthru.pause().unpipe().removeAllListeners().destroy() // just joking
       t.end()
@@ -76,7 +76,7 @@ tape('unerror', t => {
 
     createReadableValve(passthru, chunk => !/fraud/.test(chunk))
       .subscribe(chunk => t.false(/fraud/.test(chunk), 'no fraud passed thru'))
-      .error(function handler (err) {
+      .onerror(function handler (err) {
         if (++called > 1) t.fail('not unerrored')
         t.ok(err.message, 'some error')
         this.unerror(handler)
@@ -94,11 +94,20 @@ tape('unerror', t => {
   }
 })
 
-tape('fatal', t => {
+tape('fatal pt1', t => {
+  t.throws(() => {
+    createReadableValve(new PassThrough(), chunk => t.false(false))
+      .subscribe()
+  }, TypeError, 'listener is not a function')
+
+  t.end()
+})
+
+tape('fatal pt2', t => {
   t.throws(() => {
     createReadableValve(new PassThrough())
-      .subscribe(chunk => t.false(/fraud/.test(chunk), 'no fraud passed thru'))
-  }, TypeError)
+      .subscribe(chunk => t.false(/fraud/.test(chunk)))
+  }, TypeError, 'predicate is not a function')
 
   t.end()
 })
@@ -112,7 +121,7 @@ tape('predicate override', t => {
       chunk => t.true(/fraud/.test(chunk), 'only fraud'), // listener
       chunk => /fraud/.test(chunk)                        // predicate
     )
-    .error(t.end)
+    .onerror(t.end)
 
-  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye']) passthru.write(msg)
+  for (const msg of [ 'hi', 'fraud', 'blabla', 'bye' ]) passthru.write(msg)
 })

@@ -40,25 +40,21 @@ The valve will filter out all messages that contain the string `'fraud'`.
 
 ### `valve = createReadableValve(stream[, pred])`
 
-Create a valve for a readable stream that filters according to a predicate function. If the predicate is not passed at instantiation it must be provided in any calls of `valve.subscribe` and `valve.subscribeOnce`.
+Create a valve for a readable stream that filters according to a predicate function. If the predicate is not passed at instantiation it must be provided in any calls of `valve.subscribe`.
 
-### `valve.subscribe(listener[, pred])`
+### `valve.subscribe(listener[, pred][, n])`
 
-Subscribe a listener to the valve. If no predicate was passed at instantiation it must be provided here.
+Subscribe a listener to the valve. If no predicate was passed at instantiation it must be provided here. If a predicate was passed at instantiation and also to a call of `valve.subscribe`, the latter takes precedence. The trailing parameter can be used to limit the number of listener calls.
 
-### `valve.subscribeOnce(listener[, pred])`
-
-Subscribe a listener to the valve that will be called at most once. If no predicate was passed at instantiation it must be provided here.
-
-> You can specify various predicate listeners to a readable stream with only one valve by specifying distinct predicates in `valve.subscribe` and `valve.subscribeOnce` calls.
+> You can specify various predicate listeners to a readable stream with only one valve by specifying distinct predicates in `valve.subscribe` calls.
 
 ### `valve.unsubscribe(listener)`
 
 Unubscribe a listener from the valve.
 
-### `valve.error(handler)`
+### `valve.onerror(handler[, n])`
 
-Handle stream errors.
+Handle stream errors. Setting the trailing parameter to a positive number limits the number of handler calls.
 
 ### `valve.unerror(handler)`
 
