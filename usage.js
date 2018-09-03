@@ -7,4 +7,4 @@ createReadableValve(passthru, chunk => !/fraud/.test(chunk))
   .subscribe(chunk => console.log(String(chunk)))
   .onerror(console.error)
 
-for (const msg of [ 'hi', 'fraud', 'blabla', 'bye']) passthru.write(msg)
+for (const msg of [ 'hi', 'fraud', 'blabla', 'bye' ]) passthru.write(msg)

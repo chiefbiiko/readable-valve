@@ -28,7 +28,7 @@ createReadableValve(passthru, chunk => !/fraud/.test(chunk))
   .subscribe(chunk => console.log(String(chunk)))
   .onerror(console.error)
 
-for (const msg of [ 'hi', 'fraud', 'blabla', 'bye']) passthru.write(msg)
+for (const msg of [ 'hi', 'fraud', 'blabla', 'bye' ]) passthru.write(msg)
 ```
 
 The valve will filter out all messages that contain the string `'fraud'`.
@@ -51,13 +51,13 @@ Subscribe a listener to the valve. If no predicate was passed at instantiation i
 
 Unubscribe a listener from the valve.
 
-### `valve.onerror(handler[, n])`
+### `valve.onerror(listener[, n])`
 
-Handle stream errors. Setting the trailing parameter to a positive number limits the number of handler calls.
+Handle stream errors. Setting the trailing parameter to a positive number limits the number of listener calls.
 
-### `valve.unerror(handler)`
+### `valve.unerror(listener)`
 
-Unregister the passed error handler.
+Unregister the passed error listener.
 
 ***
 
