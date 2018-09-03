@@ -1,6 +1,6 @@
 {
   "name": "readable-valve",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "subscribe to filtered emits of readable streams",
   "main": "index.js",
   "scripts": {
