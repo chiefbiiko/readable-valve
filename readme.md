@@ -37,7 +37,7 @@ The valve will filter out all messages that contain the string `'fraud'`.
 
 ## API
 
-### `valve = createReadableValve(stream[, pred])`
+### `valve = createReadableValve(readable[, pred])`
 
 Create a valve for a readable stream that filters according to a predicate function. If the predicate is not passed at instantiation it must be provided in any calls of `valve.subscribe`.
 
@@ -45,7 +45,7 @@ Create a valve for a readable stream that filters according to a predicate funct
 
 Subscribe a listener to the valve. If no predicate was passed at instantiation it must be provided here. If a predicate was passed at instantiation and also to a call of `valve.subscribe`, the latter takes precedence. The trailing parameter can be used to limit the number of listener calls.
 
-> You can specify various predicate listeners to a readable stream with only one valve by specifying distinct predicates in `valve.subscribe` calls.
+> You can register various predicate listeners with a readable stream using only one valve by specifying distinct predicates in `valve.subscribe` calls.
 
 ### `valve.unsubscribe(listener)`
 
@@ -53,7 +53,9 @@ Unubscribe a listener from the valve.
 
 ### `valve.onerror(listener[, n])`
 
-Handle stream errors. Setting the trailing parameter to a positive number limits the number of listener calls.
+Handle errors of the underlying readable stream. Setting the trailing parameter to a positive number limits the number of listener calls.
+
+> The valve itself does not generate errors. All errors emitted by a valve are simply forwarded from the underlying readable stream. Thus, the `valve.onerror` method should primarily be used to attach error listeners to readables which do not have any error listeners registered with themselves. 
 
 ### `valve.unerror(listener)`
 
